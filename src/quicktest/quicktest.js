@@ -10,6 +10,71 @@
  * @typedef {TestSingleExpectResult|TestSingleExpectThrow} TestSingle
  * @typedef {TestSingle|TestWithProvider} Test
  *
+ */
+
+const runTests = function(outDiv, tests) {
+  /** @type {Generator} */
+  let testIteration = QuickTestIterator(tests);
+  let done = false;
+  let i = 0;
+  do {
+    i++;
+    let testResultObject = testIteration.next();
+    if (testResultObject.done) {
+      break;
+    }
+
+    /** @type {TestResult} */
+    let result = testResultObject.value;
+
+    let resultDiv = document.createElement('div');
+    resultDiv.id = 'result-' + i;
+    resultDiv.classList.add('result');
+    resultDiv.classList.add(result.testPassed ? 'pass' : 'fail');
+    let resultString = document.createTextNode(
+        'Test ' + (result.testPassed ? 'Passed' : 'Failed')
+        + ' - ' + result.testDescription
+        + ' (' + result.testDurationInMilliseconds.toPrecision(3) + 'ms)');
+    resultDiv.appendChild(resultString);
+
+    if (!result.testPassed) {
+      let detailsHeaderDiv = document.createElement('div');
+      detailsHeaderDiv.id = 'details-header-' + i;
+      detailsHeaderDiv.classList.add('details-header');
+      detailsHeaderDiv.appendChild(
+          document.createTextNode('Details: ' + result.testDiagnosis));
+      resultDiv.appendChild(detailsHeaderDiv);
+
+      let detailsDiv = document.createElement('div');
+      detailsDiv.id = 'details-' + i;
+      detailsDiv.classList.add('details');
+      detailsDiv.innerHTML =
+          '<pre>' +
+          'Expected Result: type = ' + (typeof result.expectedResult) +
+          '; value = ' + result.expectedResult +
+          '\n' +
+          'Observed Result: type = ' + (typeof result.observedResult) +
+          '; value = ' + result.observedResult +
+          '\n' +
+          'Expected Error: type = ' + (typeof result.expectedError) +
+          '; value = ' + result.expectedError +
+          '\n' +
+          'Observed Error: type = ' + (typeof result.thrownError) +
+          '; value = ' + result.thrownError;
+      if (typeof result.thrownError === 'object') {
+        detailsDiv.innerHTML +=
+            '<pre>\nStack Trace:\n' + result.thrownError.stack;
+      }
+      resultDiv.appendChild(detailsDiv);
+    }
+
+    outDiv.appendChild(resultDiv);
+    console.log(testResultObject);
+  } while (!done);
+
+}
+
+/**
  * @param {[Test]} tests
  * @constructor
  */
