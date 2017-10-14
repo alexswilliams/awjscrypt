@@ -1,0 +1,29 @@
+{
+  "name": "awjscrypt",
+  "version": "1.0.0",
+  "description": "ES6 Crypto Library (Licence Free)",
+  "main": "index.js",
+  "scripts": {
+    "md5": "babel src/md5/md5.js --out-file min/md5.babeld.min.js",
+    "quicktest": "babel src/quicktest/quicktest.js --out-file min/quicktest.babeld.min.js",
+    "blowfish": "babel src/blowfish/blowfish.js --out-file min/blowfish.babeld.min.js",
+    "bcrypt": "babel src/bcrypt/bcrypt.js --out-file min/bcrypt.babeld.min.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alexswilliams/awjscrypt.git"
+  },
+  "author": "Alex Williams",
+  "license": "",
+  "bugs": {
+    "url": "https://github.com/alexswilliams/awjscrypt/issues"
+  },
+  "homepage": "https://github.com/alexswilliams/awjscrypt#readme",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-minify": "^0.2.0",
+    "eslint": "^4.9.0"
+  }
+}

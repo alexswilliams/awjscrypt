@@ -1,0 +1,6 @@
+{
+  "presets": ["env", ["minify", {
+    "mangle": true,
+    "keepFnName": true
+  }]]
+}

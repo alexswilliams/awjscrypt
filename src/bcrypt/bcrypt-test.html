@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>BCrypt Test</title>
+    <style>
+      div#results {
+        border: 1px solid black;
+        padding: 1em;
+        margin: 1em;
+        font-family: monospace;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>BCrypt Test</h1>
+    <button id="runTest">Run Tests</button>
+    <div id="results">
+
+    </div>
+    <script src="bcrypt.js"></script>
+    <script>
+      document.getElementById('runTest').addEventListener('click', function() {
+        let outDiv = document.getElementById('results');
+        outDiv.innerText += bcrypt.base64.encode('') + "\n";
+        outDiv.innerText += bcrypt.base64.encode('foo') + "\n";
+        outDiv.innerText += bcrypt.base64.encode('foobar') + "\n";
+        outDiv.innerText += bcrypt.base64.encode([3]) + "\n";
+
+        outDiv.innerText += bcrypt.base64.decode(0, '') + "\n";
+        outDiv.innerText += bcrypt.base64.decode(1, 'Xe') + "\n";
+        outDiv.innerText += bcrypt.base64.decode(6, 'Xk7tWkDw') + "\n";
+        outDiv.innerText += bcrypt.base64.decode(1, '.u') + "\n";
+
+        outDiv.innerText += '\n';
+
+        outDiv.innerText += bcrypt.initSalt(6) + '\n';
+        outDiv.innerText += bcrypt.hashPass('testpass', bcrypt.initSalt(6)) + '\n';
+
+        outDiv.innerText += '\n';
+
+        key = bcrypt.base64._makeByteArray('AAAAA');
+        key2 = bcrypt.base64._makeByteArray('abcdefghijklmnopqrstuvwxyz');
+        data = [];
+        data2 = [0x424c4f57, 0x46495348];
+
+        for (i = 0; i < 10; i++) {data[i] = i;}
+
+        report = function(data, len) {
+          for (i = 0; i < len; i += 2) {
+            outDiv.innerText += 'Block ' + i / 2 + ': ' + data[i].toString(16)
+                                + ' ' + data[i + 1].toString(16) + '\n';
+          }
+          outDiv.innerText += '\n';
+        };
+
+        context = [];
+        blowFish.key(context, key, 5);
+        blowFish.enc(context, data, 5);
+        blowFish.dec(context, data, 5);
+        report(data, 10);
+
+        context = [];
+        blowFish.key(context, key2, key2.length);
+        blowFish.enc(context, data2, 1);
+        report(data2, 2);
+        blowFish.dec(context, data2, 1);
+        report(data2, 2);
+
+        outDiv.innerText += '\n-----------------\n';
+
+        key = bcrypt.base64._makeByteArray('0000000000000000');
+        data = bcrypt.base64._makeByteArray('0000000000000000');
+        context = [];
+        blowFish.key(context, key, key.length);
+        blowFish.ecbEncrypt(context, data, data.length);
+        report(data, data.length);
+      });
+    </script>
+  </body>
+</html>
