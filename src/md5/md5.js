@@ -199,13 +199,10 @@ MD5.prototype.pad = function() {
  */
 MD5.prototype.final = function() {
   let digest = new Uint8Array(this.MD5_DIGEST_LENGTH);
-  console.log(this.context.state, this.context.buffer);
   this.pad();
-  console.log(this.context.count, this.context.state, this.context.buffer);
 
   for (let i = 0; i < 4; i++) {
     this.put32LittleEndian(digest, i * 4, this.context.state[i]);
-    console.log(digest);
   }
   this.explicitZero();
   this.init();
@@ -275,8 +272,6 @@ MD5.prototype.bufferToDwordArray = function() {
  */
 MD5.prototype.transform = function() {
   const bufferAsDwords = this.bufferToDwordArray();
-
-  console.log('TRANSFORM');
 
   let a = this.context.state[0];
   let b = this.context.state[1];
