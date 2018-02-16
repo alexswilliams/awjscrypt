@@ -8,7 +8,7 @@
  * @return {!string}
  */
 function md5(message) {
-  md = new MD5();
+  const md = new MD5();
 
   let messageToDigest;
   if (typeof message === 'string') {
